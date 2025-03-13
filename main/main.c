@@ -24,6 +24,7 @@ void timer_callback(uint gpio, uint32_t events){
         tempo_final =  to_us_since_boot(get_absolute_time());
         diferenca = tempo_final - tempo_inicial;
         pos = diferenca * 0.017015;
+     }else {
         tempo_inicial = to_us_since_boot(get_absolute_time());
      }
 }
