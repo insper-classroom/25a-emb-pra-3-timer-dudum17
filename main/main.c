@@ -69,7 +69,6 @@ int main() {
             .sec   = 00
         };
 
-        rtc_set_alarm(&alarm, &alarm_callback);
 
 
        
@@ -89,6 +88,7 @@ int main() {
         }
 
         if (medir == 1){
+
 
            gpio_put(trigger, 1);
            sleep_us(10);
