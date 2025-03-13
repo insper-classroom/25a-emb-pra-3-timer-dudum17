@@ -18,6 +18,7 @@ volatile int tempo_final;
 volatile int diferenca;
 volatile int pos;
 static volatile bool fired = false;
+int medir = 0;
 
 static void alarm_callback(void) {
     fired = true;
@@ -38,7 +39,7 @@ void timer_callback(uint gpio, uint32_t events){
 
 int main() {
     stdio_init_all();
-    printf("RTC Alarm Repeat!\n");
+    printf("Digite 's' para iniciar e 'o' para parar as medições.\n");
 
     gpio_init(echo);
     gpio_set_dir(echo, GPIO_IN);
@@ -49,6 +50,8 @@ int main() {
 
     gpio_set_irq_enabled_with_callback(
         echo, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, &timer_callback);
+
+        
 
         datetime_t t = {
             .year  = 2025,
@@ -75,16 +78,36 @@ int main() {
 
         rtc_set_alarm(&alarm, &alarm_callback);
 
+
+       
+
+
     while (true) {
-        gpio_put(trigger, 1);
-        sleep_us(10);
-        gpio_put(trigger, 0);
-        datetime_t t = {0};
-        rtc_get_datetime(&t);
-        printf("%02d:%02d:%02d - %d cm\n", t.hour, t.min, t.sec, pos);
-        if (fired) {
-            fired = 0;    
+        int caracter = getchar_timeout_us(1000);
+
+        if (caracter != PICO_ERROR_TIMEOUT){
+            if(caracter == 's'){
+                medir = 1;
+                printf("Iniciando medições...\n");
+            }else if (caracter == 'o') {
+                medir = 0;
+                printf("Parando medições...\n");
+            }
         }
 
+        if (medir == 1){
+
+           gpio_put(trigger, 1);
+           sleep_us(10);
+           gpio_put(trigger, 0);
+           datetime_t t = {0};
+           rtc_get_datetime(&t);
+           printf("%02d:%02d:%02d - %d cm\n", t.hour, t.min, t.sec, pos);
+           if (fired) {
+               fired = 0;    
+            }
+            sleep_ms(500);
+
+         }
     }
 }
