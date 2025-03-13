@@ -59,16 +59,6 @@ int main() {
         rtc_init();
         rtc_set_datetime(&t);
 
-        datetime_t alarm = {
-            .year  = -1,
-            .month = -1,
-            .day   = -1,
-            .dotw  = -1,
-            .hour  = -1,
-            .min   = -1,
-            .sec   = 00
-        };
-
 
 
        
