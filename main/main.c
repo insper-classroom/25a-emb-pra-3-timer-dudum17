@@ -17,8 +17,7 @@ volatile int tempo_inicial;
 volatile int tempo_final;
 volatile int diferenca;
 volatile int pos;
-static volatile bool fired = false;
-int medir = 0;
+
 
 static void alarm_callback(void) {
     fired = true;
@@ -29,15 +28,13 @@ void timer_callback(uint gpio, uint32_t events){
         tempo_final =  to_us_since_boot(get_absolute_time());
         diferenca = tempo_final - tempo_inicial;
         pos = diferenca * 0.017015;
-        if(pos > 300){
-            printf("erro \n");
-        }
-     }else{
         tempo_inicial = to_us_since_boot(get_absolute_time());
      }
 }
 
 int main() {
+
+    int medir = 0;
     stdio_init_all();
     printf("Digite 's' para iniciar e 'o' para parar as medições.\n");
 
@@ -100,12 +97,8 @@ int main() {
            gpio_put(trigger, 1);
            sleep_us(10);
            gpio_put(trigger, 0);
-           datetime_t t = {0};
            rtc_get_datetime(&t);
            printf("%02d:%02d:%02d - %d cm\n", t.hour, t.min, t.sec, pos);
-           if (fired) {
-               fired = 0;    
-            }
             sleep_ms(500);
 
          }
