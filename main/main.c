@@ -19,10 +19,6 @@ volatile int diferenca;
 volatile int pos;
 
 
-static void alarm_callback(void) {
-    fired = true;
-}
-
 void timer_callback(uint gpio, uint32_t events){
      if (events == 0x4){
         tempo_final =  to_us_since_boot(get_absolute_time());
